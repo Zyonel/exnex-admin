@@ -1,59 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Nexa Admin Panel</title>
-  <style>
-    body {
-      font-family: Poppins, sans-serif;
-      background: linear-gradient(135deg, #120417, #2b0d3a);
-      color: #fff;
-      padding: 20px;
-    }
-    h1 { text-align: center; }
-    .gallery {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 30px;
-    }
-    img {
-      width: 180px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      transition: transform .2s;
-    }
-    img:hover { transform: scale(1.05); }
-  </style>
+  <title>Uploaded Receipts</title>
 </head>
 <body>
-  <h1>📸 Uploaded Receipts</h1>
-  <div class="gallery" id="gallery">Loading...</div>
+
+<h2>Uploaded Receipts</h2>
+<div id="list"></div>
 
 <script>
-  // Change this to your actual Render backend URL
-  const backendURL = "https://sub-nexa.onrender.com";
+fetch('/uploads-list')
+  .then(res => res.json())
+  .then(files => {
+    const list = document.getElementById('list');
 
-  fetch(`${backendURL}/uploads-list`)
-    .then(res => res.json())
-    .then(files => {
-      const gallery = document.getElementById('gallery');
-      gallery.innerHTML = "";
-      if (!files.length) {
-        gallery.innerHTML = "<p>No receipts uploaded yet.</p>";
-        return;
+    if (!files.length) {
+      list.innerHTML = 'No uploads yet';
+      return;
+    }
+
+    files.forEach(f => {
+      if (f.endsWith('.pdf')) {
+        list.innerHTML += `<a href="${f}" target="_blank">View PDF</a><br>`;
+      } else {
+        list.innerHTML += `<img src="${f}" width="250"><br>`;
       }
-      files.forEach(f => {
-        const img = document.createElement('img');
-        img.src = `${backendURL}${f}`;
-        gallery.appendChild(img);
-      });
-    })
-    .catch(err => {
-      console.error(err);
-      document.getElementById('gallery').innerHTML = "<p>⚠️ Unable to load receipts.</p>";
     });
+  });
 </script>
 
 </body>
