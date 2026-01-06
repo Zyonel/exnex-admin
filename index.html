@@ -9,7 +9,9 @@
 <div id="list"></div>
 
 <script>
-fetch('/uploads-list')
+//fetch('/uploads-list')
+fetch('https://exnex-admin-1.onrender.com//uploads-list')
+
   .then(res => res.json())
   .then(files => {
     const list = document.getElementById('list');
